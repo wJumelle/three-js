@@ -48,3 +48,9 @@ d'instructions (afin d'envoyer toutes les datas : lumières, angles, textures et
 * si on a très peu d'éléments mais avec des shaders très complexe et des surfaces de pixels très importantes à l'écran ==> on fait ramer le GPU
 
 ### Pratique
+
+Il est possible d'instancier autant de **mesh** qu'on le souhaite à l'aide de la même **geometry** et du même **shader**.
+
+`camera.position.set(x, y, z)` permet de setup la position de la caméra. Par défaut la position de la caméra est orientée selon l'axe **z**.
+Si on ne repositionne pas la caméra après avoir afficher une première fois un élément il est probable de ne pas pouvoir observer cette élément dans l'espace, jouer avec la
+valeur de **z** permet de l'avancer ou de la reculer et donc de le voir apparaitre.
