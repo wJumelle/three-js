@@ -12,8 +12,12 @@ const camera = new THREE.PerspectiveCamera(70, iw/ih)
 // On va donc générer procéduralement un tableau de point pour dessiner un cube
 const geometry = new THREE.BoxGeometry(1, 1, 1)
 
+// Pour le chargement des textures sur les faces de notre cube, nous avons d'abord
+// besoin de charger une image en mémoire
+const texture = new THREE.TextureLoader().load('JinxCube.jpg')
+
 // Ensuite le mesh à besoin d'un shader pour matérialiser le tableau de point
-const material = new THREE.MeshPhongMaterial({color: 0xffffff})
+const material = new THREE.MeshPhongMaterial({map: texture})
 
 // Il ne nous reste plus qu'à créer une instance mesh qui va utiliser geometry et material
 const mesh = new THREE.Mesh(geometry, material)
@@ -31,7 +35,7 @@ scene.add(light)
 camera.position.set(0, 0, 3)
 
 // On positionne la lumière au même niveau que la caméra
-light.position.set(0, 0, 3)
+light.position.set(0, 0, 2)
 
 // On instancie le moteur de rendu en définissant la balise à utilsier
 const renderer = new THREE.WebGLRenderer({canvas})

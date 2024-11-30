@@ -83,3 +83,7 @@ De notre coté, nous allons utiliser un shader capable de simuler l'éclairage s
 `new THREE.MeshPhongMaterial({color: 0xffffff})` permet donc d'utiliser ce nouveau shader.
 
 `new THREE.PointLight(0xeeeeee)` pour que notre nouveau shader fonctionne nous avons besoin d'ajouter une lumière, que l'on vient insérer ensuite dans la scène `scene.add(light)` et que l'on positionne au même niveau que notre cube `light.position.set(0, 0, 3)`.
+
+Nous souhaitons ajouter des textures aux faces de notre cube. Pour se faire nous allons
+devoir charger au préalable notre texture à l'aide de `new THREE.TextureLoader().load(path)`.
+On utilise donc l'image en tant **qu'uniform** que l'on transmet au shader avec `new THREE.MeshPhongMaterial({map: texture})`. C'est alors que notre image vient s'appliquer aux surface des matériaux lors du rendu.
