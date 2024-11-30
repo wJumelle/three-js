@@ -13,16 +13,25 @@ const camera = new THREE.PerspectiveCamera(70, iw/ih)
 const geometry = new THREE.BoxGeometry(1, 1, 1)
 
 // Ensuite le mesh à besoin d'un shader pour matérialiser le tableau de point
-const material = new THREE.MeshBasicMaterial({color: 0xffffff})
+const material = new THREE.MeshPhongMaterial({color: 0xffffff})
 
 // Il ne nous reste plus qu'à créer une instance mesh qui va utiliser geometry et material
 const mesh = new THREE.Mesh(geometry, material)
 
+// Pour utiliser le shader MeshPhongMaterial nous allons avoir besoin d'instancier une lumière
+const light = new THREE.PointLight(0xeeeeee)
+
 // On ajoute l'instance de mesh à la scene
 scene.add(mesh)
 
+// On ajoute la lumière à la scène pour qu'elle soit prise en compte par le moteur
+scene.add(light)
+
 // On positionne la caméra à l'aide de la propriété position (x, y, z)
 camera.position.set(0, 0, 3)
+
+// On positionne la lumière au même niveau que la caméra
+light.position.set(0, 0, 3)
 
 // On instancie le moteur de rendu en définissant la balise à utilsier
 const renderer = new THREE.WebGLRenderer({canvas})

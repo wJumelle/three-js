@@ -78,4 +78,8 @@ Maintenant que nous avons jouer avec la rotation des axes de notre cube nous all
 Il y a déjà pas mal de choix au niveau des shaders trouvables dans la [**documentation au niveau des materials**](https://threejs.org/docs/index.html?q=material#api/en/materials/MeshBasicMaterial).
 On peut bien évidemment en créer un personnalisé.
 
-De notre coté, nous allons utiliser un shader capable de simuler l'éclairage sur les surface.
+De notre coté, nous allons utiliser un shader capable de simuler l'éclairage sur les surface, **MeshPhongMaterial**.
+
+`new THREE.MeshPhongMaterial({color: 0xffffff})` permet donc d'utiliser ce nouveau shader.
+
+`new THREE.PointLight(0xeeeeee)` pour que notre nouveau shader fonctionne nous avons besoin d'ajouter une lumière, que l'on vient insérer ensuite dans la scène `scene.add(light)` et que l'on positionne au même niveau que notre cube `light.position.set(0, 0, 3)`.
