@@ -49,8 +49,33 @@ d'instructions (afin d'envoyer toutes les datas : lumières, angles, textures et
 
 ### Pratique
 
+Attention, la documentation en français n'est pas entièrement traduite.
+Il vaut donc mieux passer par la documentation en anglais.
+
+`new THREE.Scene()` permet d'instancier la scène.
+
+`new THREE.PerspectiveCamera(focal, screenRatio)` permet de définir notre caméra en précisant sa focale (70) et le ratio de l'écran (iw/ih).
+
+`new THREE.BoxGeometry(width, height, depth)` sert à définir la géométrie de notre **mesh**. Dans notre cas nous avons définit une boite avec paramètre (1,1,1) ce qui correspond à un cube.
+
+`new THREE.MeshBasicMaterial({color: 0xffffff})` définit un shader pour notre mesh. Ici nous ne précisons qu'une couleur pour notre cube.
+
+`new THREE.Mesh(geometry, material)` instancie notre **mesh** en lui fournissant comme paramètre sa géométrie et son shader.
+
+> Documentation autour de [**Mesh**](https://threejs.org/docs/?q=mesh#api/en/objects/Mesh), les mesh héritent de l'objet [**Object3D**](https://threejs.org/docs/?q=mesh#api/en/core/Object3D)
+
 Il est possible d'instancier autant de **mesh** qu'on le souhaite à l'aide de la même **geometry** et du même **shader**.
+
+`scene.add(mesh)` ajoute un nouveau mesh à notre scène.
 
 `camera.position.set(x, y, z)` permet de setup la position de la caméra. Par défaut la position de la caméra est orientée selon l'axe **z**.
 Si on ne repositionne pas la caméra après avoir afficher une première fois un élément il est probable de ne pas pouvoir observer cette élément dans l'espace, jouer avec la
 valeur de **z** permet de l'avancer ou de la reculer et donc de le voir apparaitre.
+
+`requestAnimationFrame()` est une fonction qui va être appelé par le navigateur à chaque fois que ce dernier a fini son rendu. Ainsi, on peut s'en servir pour animer frame / frame nos éléments.
+
+Maintenant que nous avons jouer avec la rotation des axes de notre cube nous allons nous intéresser aux shader afin d'avoir quelque chose d'un peu moins basique.
+Il y a déjà pas mal de choix au niveau des shaders trouvables dans la [**documentation au niveau des materials**](https://threejs.org/docs/index.html?q=material#api/en/materials/MeshBasicMaterial).
+On peut bien évidemment en créer un personnalisé.
+
+De notre coté, nous allons utiliser un shader capable de simuler l'éclairage sur les surface.

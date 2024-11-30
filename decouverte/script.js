@@ -19,7 +19,7 @@ const material = new THREE.MeshBasicMaterial({color: 0xffffff})
 const mesh = new THREE.Mesh(geometry, material)
 
 // On ajoute l'instance de mesh à la scene
-scene.add(mesh);
+scene.add(mesh)
 
 // On positionne la caméra à l'aide de la propriété position (x, y, z)
 camera.position.set(0, 0, 3)
@@ -27,5 +27,18 @@ camera.position.set(0, 0, 3)
 // On instancie le moteur de rendu en définissant la balise à utilsier
 const renderer = new THREE.WebGLRenderer({canvas})
 
-// On lance une instruction pour effectuer un premier rendu en précisant la scène que l'on souhaite afficher et la caméra
-renderer.render(scene, camera)
+// On anime la propriété rotation de notre cube
+loop()
+
+function loop() {
+  // La fonction requestAnimationFrame() va apppeler la fonction fourni en paramètre
+  // à chaque fois que le navigateur a terminé un rendu
+  requestAnimationFrame(loop)
+
+  // A chaque frame nous allons jouer avec la rotation de l'axe x et y de notre cube
+  mesh.rotation.y += 0.01
+  mesh.rotation.x += 0.005
+
+  // On lance une instruction pour effectuer un premier rendu en précisant la scène que l'on souhaite afficher et la caméra
+  renderer.render(scene, camera)
+}
