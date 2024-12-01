@@ -1,4 +1,5 @@
 import * as THREE from 'three'
+import GLTFLoader from 'gltfloader'
 
 // Déclaration de notre scène, qui contiendra l'ensemble des éléments que l'on souhaite afficher
 const scene = new THREE.Scene()
@@ -10,11 +11,13 @@ const camera = new THREE.PerspectiveCamera(70, iw/ih)
 // On ajoute un premier élément à l'image
 // Pour fonctionner, un mesh à besoin d'une géométrie
 // On va donc générer procéduralement un tableau de point pour dessiner un cube
-const geometry = new THREE.BoxGeometry(1, 1, 1)
+// const geometry = new THREE.BoxGeometry(1, 1, 1)
+const geometry = await GLTFLoader.loadGeometry('./assets/mario/mario.glb')
 
 // Pour le chargement des textures sur les faces de notre cube, nous avons d'abord
 // besoin de charger une image en mémoire
-const texture = new THREE.TextureLoader().load('JinxCube.jpg')
+// const texture = new THREE.TextureLoader().load('./assets/JinxCube.jpg')
+const texture = new THREE.TextureLoader().load('./assets/mario/mario.png')
 
 // Ensuite le mesh à besoin d'un shader pour matérialiser le tableau de point
 const material = new THREE.MeshPhongMaterial({map: texture})
@@ -32,10 +35,10 @@ scene.add(mesh)
 scene.add(light)
 
 // On positionne la caméra à l'aide de la propriété position (x, y, z)
-camera.position.set(0, 0, 3)
+camera.position.set(0, 1.5, 4)
 
 // On positionne la lumière au même niveau que la caméra
-light.position.set(0, 0, 2)
+light.position.set(0, 1, 2)
 
 // On instancie le moteur de rendu en définissant la balise à utilsier
 const renderer = new THREE.WebGLRenderer({canvas})
@@ -50,7 +53,7 @@ function loop() {
 
   // A chaque frame nous allons jouer avec la rotation de l'axe x et y de notre cube
   mesh.rotation.y += 0.01
-  mesh.rotation.x += 0.005
+  // mesh.rotation.x += 0.005
 
   // On lance une instruction pour effectuer un premier rendu en précisant la scène que l'on souhaite afficher et la caméra
   renderer.render(scene, camera)

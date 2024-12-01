@@ -1,5 +1,9 @@
 # Découverte
 
+## Ressources
+
+* [**SketchFab - Guinavarro**](https://sketchfab.com/guinavarro.al)
+
 ## Vidéo 1
 **[Tuto THREE.js](https://www.youtube.com/watch?v=vhK6o26OV4Q&list=WL&index=4) par Codeur de nuit**
 
@@ -87,3 +91,22 @@ De notre coté, nous allons utiliser un shader capable de simuler l'éclairage s
 Nous souhaitons ajouter des textures aux faces de notre cube. Pour se faire nous allons
 devoir charger au préalable notre texture à l'aide de `new THREE.TextureLoader().load(path)`.
 On utilise donc l'image en tant **qu'uniform** que l'on transmet au shader avec `new THREE.MeshPhongMaterial({map: texture})`. C'est alors que notre image vient s'appliquer aux surface des matériaux lors du rendu.
+
+Maintenant nous allons utiliser une géométrie non procédurale, créé à la main avec chaque vertex (point) positionné manuellement.
+Pour cela nous allons utiliser le package **GLTFLoader** mis à disposition par CodeurDeNuit sur Github `npm i github:codeurdenuit/GLTFLoader`.
+
+De mon coté j'ai tenté d'importer Bulle, des supers nanas et sans réussite. J'ai donc rebasculer vers les fichiers présent dans le github du tuto. Il faudra tester avec le loader en addon pour track les erreurs, je n'ai pas l'impression que le loader
+de Codeurdelanuit renvoie corresctement toutes les erreurs.
+
+Sur **Blender** lors de l'obtention d'un fichier, il faut bien veiller à ce que certaines cases soit cocher lors de l'export afin que 3 tableaux nous soit mis à disposition :
+* la position des points/vertex
+* l'orientation des points/vertex
+* les coordonnées de textures des points/vertex
+
+Donc pour charger notre model 3D de Mario, nous devons charger 2 choses, notre nouveau tableau de vertex (sa géométrie) `await GLTFLoader.loadGeometry('./assets/mario/mario.glb')` et sa texture `new THREE.TextureLoader().load('./assets/mario/mario.png')`.
+Il faudra ensuite un peu jouer avec la caméra et la lumière car l'objet n'est plus dans les mêmes dimensions.
+
+```
+camera.position.set(0, 1.5, 4)
+light.position.set(0, 1, 2)
+```
