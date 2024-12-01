@@ -110,3 +110,12 @@ Il faudra ensuite un peu jouer avec la caméra et la lumière car l'objet n'est 
 camera.position.set(0, 1.5, 4)
 light.position.set(0, 1, 2)
 ```
+
+Tant que l'on respecte les formats donnés dans la doc (glTF, glb, FBX, OBJ, COLLADA) on peut charger autant de model 3D qu'on le souhaite.
+
+Nous allons charger un nouveau model (bibi) et modifier une propriété du shader afin de faire disparaitre la brillance du matériaux.
+```
+const geometry = await GLTFLoader.loadGeometry('./assets/bibi/bibi.glb')
+const texture = new THREE.TextureLoader().load('./assets/bibi/bibi.png')
+const material = new THREE.MeshPhongMaterial({map: texture, shininess: 0})
+```

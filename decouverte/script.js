@@ -12,15 +12,15 @@ const camera = new THREE.PerspectiveCamera(70, iw/ih)
 // Pour fonctionner, un mesh à besoin d'une géométrie
 // On va donc générer procéduralement un tableau de point pour dessiner un cube
 // const geometry = new THREE.BoxGeometry(1, 1, 1)
-const geometry = await GLTFLoader.loadGeometry('./assets/mario/mario.glb')
+const geometry = await GLTFLoader.loadGeometry('./assets/bibi/bibi.glb')
 
 // Pour le chargement des textures sur les faces de notre cube, nous avons d'abord
 // besoin de charger une image en mémoire
 // const texture = new THREE.TextureLoader().load('./assets/JinxCube.jpg')
-const texture = new THREE.TextureLoader().load('./assets/mario/mario.png')
+const texture = new THREE.TextureLoader().load('./assets/bibi/bibi.png')
 
 // Ensuite le mesh à besoin d'un shader pour matérialiser le tableau de point
-const material = new THREE.MeshPhongMaterial({map: texture})
+const material = new THREE.MeshPhongMaterial({map: texture, shininess: 0})
 
 // Il ne nous reste plus qu'à créer une instance mesh qui va utiliser geometry et material
 const mesh = new THREE.Mesh(geometry, material)
