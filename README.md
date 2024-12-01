@@ -119,3 +119,32 @@ const geometry = await GLTFLoader.loadGeometry('./assets/bibi/bibi.glb')
 const texture = new THREE.TextureLoader().load('./assets/bibi/bibi.png')
 const material = new THREE.MeshPhongMaterial({map: texture, shininess: 0})
 ```
+
+On passe maintenant à l'animation du model en découvrant les différentes techniques d'animations.
+Pour cela nous allons utiliser un deuxième fichier **bibi2.glb**.
+
+On déjà vu qu'il était possible de faire varier les matrices de transformation de nos mesh pour animer leurs positions, leurs rotations mais il est aussi possible de faire varier les positions de chaque vertex manuellement, on appelle ça du **morphing**.
+
+Lorsque sur Blender on créé une animation avec plusieurs clés, pour chaque clés nous allons utiliser un tableau de vertex avec des positions différentes. Lorsque l'on réalise l'**export de la géométrie avec ses différentes versions de tableaux de vertex** et avec le **clip d'animation**, on réalise en réalité l'**export de la scène avec les différentes mesh, les animations, les lumières, les matériaux**.
+
+Donc cette fois-ci nous avons exporter une scène avec un mesh donc nous ne devons pas charger une géométrie mais bien un mesh et sa géométrie `const mesh = await GLTFLoader.loadObject('./assets/bibi/bibi2.glb', 'bibi')`, pourquoi ? Tout simplement car l'animation n'est pas exclusivement lié à la géométrie mais bien aux deux.
+
+Une fois que l'on a chargé la mesh, nous venons instancier ses matériaux `mesh.material = new THREE.MeshPhongMaterial({map: texture, shininess: 0})`.
+
+Pour exécuter l'animation nous allons utiliser un nouveau composant Three.js, l'**AnimationMixer**.
+Le role de ce nouveau composant est d'instancier un player qui va nous permettre de jouer l'animation lié à un mesh.
+On doit donc lui transmettre notre mesh de la façon suivante `const mixer = new THREE.AnimationMixer(mesh)`.
+
+On indique plusieurs élément à notre player, l'animation que l'on souhaite jouer, sa durée et on lui demande de la jouer.
+`mixer.clipAction(mesh.animations[0]).setDuration(5).play()`
+
+Seulement ce n'est pas tout, pour pouvoir jouer correctement l'animation nous avons besoin d'une horloge qui va nous permettre de la synchroniser `const clock = new THREE.Clock()`.
+
+C'est cette horloge qui va nous être utile dans la fonction loop.
+En effet, pour chaque frame nous allons interroger l'horloge afin de connaitre le laps de temps qui sépare la frame précédente de l'actuelle. Et à l'aide de ce delta nous allons indiquer au player la progression du temps.
+```
+const dt = clock.getDelta()
+mixer.update(dt)
+```
+
+Three.js gère l'animation de notre mesh, à chaque frame il interpole l'animation entre chaque clé.
