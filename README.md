@@ -168,3 +168,7 @@ mixer.clipAction(mesh.animations[1]).setDuration(3).play()
 ```
 
 Enfin dans le tuto il s'amuse à faire varier la rotation du personnage en Y en jouant avec une oscillation prenant en paramètre le **dt**.
+
+Pour finir nous allons aborder le sujet de la génération procédurale.
+Pour l'affichage de la géométrie nous allons utiliser le shader [**PointsMaterial**](https://threejs.org/docs/#api/en/materials/PointsMaterial) qui va nous permettre d'afficher uniquement les points.
+Et donc il n'est pas nécessaire de générer les coordonnées de textures, l'orientation des faces etc, on va générer uniquement l'attribut position des points.

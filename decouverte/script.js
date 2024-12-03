@@ -15,7 +15,6 @@ const camera = new THREE.PerspectiveCamera(70, iw/ih)
 // Ex 2 :const geometry = await GLTFLoader.loadGeometry('./assets/bibi/bibi.glb')
 // Ex 3 : const mesh = await GLTFLoader.loadObject('./assets/bibi/bibi.glb', 'bibi')
 const mesh = await GLTFLoader.loadObject('./assets/bibi/bibi2.glb', 'bibi')
-console.log(mesh);
 
 // Pour le chargement des textures sur les faces de notre cube, nous avons d'abord
 // besoin de charger une image en mémoire
