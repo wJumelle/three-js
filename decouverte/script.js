@@ -13,7 +13,9 @@ const camera = new THREE.PerspectiveCamera(70, iw/ih)
 // On va donc générer procéduralement un tableau de point pour dessiner un cube
 // Ex 1 : const geometry = new THREE.BoxGeometry(1, 1, 1)
 // Ex 2 :const geometry = await GLTFLoader.loadGeometry('./assets/bibi/bibi.glb')
-const mesh = await GLTFLoader.loadObject('./assets/bibi/bibi.glb', 'bibi')
+// Ex 3 : const mesh = await GLTFLoader.loadObject('./assets/bibi/bibi.glb', 'bibi')
+const mesh = await GLTFLoader.loadObject('./assets/bibi/bibi2.glb', 'bibi')
+console.log(mesh);
 
 // Pour le chargement des textures sur les faces de notre cube, nous avons d'abord
 // besoin de charger une image en mémoire
@@ -22,7 +24,7 @@ const texture = new THREE.TextureLoader().load('./assets/bibi/bibi.png')
 
 // Ensuite le mesh à besoin d'un shader pour matérialiser le tableau de point
 // Ex 1 et 2 :const material = new THREE.MeshPhongMaterial({map: texture, shininess: 0})
-mesh.material = new THREE.MeshPhongMaterial({map: texture, shininess: 0})
+mesh.children[0].material = new THREE.MeshPhongMaterial({map: texture, shininess: 0})
 
 // Il ne nous reste plus qu'à créer une instance mesh qui va utiliser geometry et material
 // Ex 1 et 2 : const mesh = new THREE.Mesh(geometry, material)
@@ -51,10 +53,17 @@ const mixer = new THREE.AnimationMixer(mesh)
 // On lui indique l'animation à suivre animations[0]
 // La durée qui est en 5 frames setDuration(5)
 // et on démarre
-mixer.clipAction(mesh.animations[0]).setDuration(5).play()
+// Ex 1 / 2 / 3 : mixer.clipAction(mesh.animations[0]).setDuration(5).play()
+// On anime le skelette
+mixer.clipAction(mesh.animations[0]).setDuration(3).play()
+// On anime le morphing
+mixer.clipAction(mesh.animations[1]).setDuration(3).play()
 
 // On instancie une horloge qui va nous permettre de synchroniser l'animation
 const clock = new THREE.Clock()
+
+// On créé une légère oscillation au niveau de l'axe y
+let t = 0
 
 // On anime la propriété rotation de notre cube
 loop()
@@ -70,6 +79,12 @@ function loop() {
 
   // A chaque frame nous intérogeons l'horloge pour connaitre le laps de temps depuis la dernière image
   const dt = clock.getDelta()
+
+  // Met à jour la valeur de l'oscilation en fonction de dt
+  t += dt
+
+  // Et on applique la rotation
+  mesh.rotation.y = Math.cos(t*Math.PI/4)/2
 
   // Et on indique en fonction de ce delta la progression du temps
   mixer.update(dt)

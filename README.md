@@ -148,3 +148,23 @@ mixer.update(dt)
 ```
 
 Three.js gère l'animation de notre mesh, à chaque frame il interpole l'animation entre chaque clé.
+
+Pour la deuxième méthode d'animation, nous allons prendre un autre fichier. Dans ce fichier on peut observer que notre bibi possède un **squelette** et une **géométrie**.
+A chaque point de cette géométrie, nous avons des **os** avec un **coefficient de pondération**, on appelle ça le **skinning**.
+Le skinning nous permet d'animer le squelette, soit par une animation **avec des clés** soit par une **animation procédurale**. Nous n'avons donc plus besoin d'animer chaque vertex un à un, on anime simplement les articulations crées.
+En allant plus loin, on peut même **coupler** l'animation skinning avec l'animation **morphing** (on anime en interpolant entre plusieurs formes du modèle de base).
+
+Lorsque l'on va jouer avec ce type de fichier (contenant le squelette etc), nous n'allons pas recevoir le **mesh** directement mais un objet 3D contenant toutes les informations nous intéressant.
+
+Si on log l'objet 3D on peut apercevoir un tableau **animations** contenant 2 **AnimationClip**, un tableau **children** contenant 2 enfants **SkinnedMesh** et **Bone** et d'autres informations utiles.
+
+Ainsi `const mesh = await GLTFLoader.loadObject('./assets/bibi/bibi2.glb', 'bibi')` nous transmet l'objet 3D et nous permet de récupérer **SkinnedMesh** à l'aide de `mesh.children[X]`.
+C'est pour cette raison que l'on applique le matériaux sur `mesh.children[0].material = new THREE.MeshPhongMaterial({map: texture, shininess: 0})`, cela n'aurait pas grand intérêt d'appliquer le matériaux sur les os.
+
+Ensuite on a vu qu'on avait un tableau de 2 **AnimationClip**, nous allons donc devoir les animer toutes les deux. L'une est l'animation du squelette (se prénomme **walk** et c'est donc l'animation de **skinning**) et l'autre est l'animation de **morphing** et permet de faire cligner des yeux notre personnage.
+```
+mixer.clipAction(mesh.animations[0]).setDuration(3).play()
+mixer.clipAction(mesh.animations[1]).setDuration(3).play()
+```
+
+Enfin dans le tuto il s'amuse à faire varier la rotation du personnage en Y en jouant avec une oscillation prenant en paramètre le **dt**.
