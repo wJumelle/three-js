@@ -29,7 +29,7 @@ mesh.children[0].material = new THREE.MeshPhongMaterial({map: texture, shininess
 // Ex 1 et 2 : const mesh = new THREE.Mesh(geometry, material)
 
 // Pour utiliser le shader MeshPhongMaterial nous allons avoir besoin d'instancier une lumière
-const light = new THREE.PointLight(0xeeeeee)
+const light = new THREE.PointLight(0xeeeeee, 10, 100)
 
 // On ajoute l'instance de mesh à la scene
 scene.add(mesh)
