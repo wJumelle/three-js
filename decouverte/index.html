@@ -15,21 +15,41 @@
     <button id="camera-controller__next">Vue suivante</button>
   </div>
   <div class="camera-inputs__container camera-logger__container">
-    <h2>Contrôles de la caméra :</h2>
-    <div class="camera-input input__x">
-      <label for="camera-input__x">X</label>
-      <input type="range" data-type="range" id="camera-input__x" min="-10" max="10" value="0" step="0.1">
-      <input type="number" data-type="number" id="camera-input-number__x" min="-10" max="10" value="0" step="0.1">
+    <div class="camera-inputs-position__container">
+      <h2 id="camera-input-position__title">Contrôles de la position caméra</h2>
+      <div class="camera-input camera-input--position input__x">
+        <span id="camera-input-position__x-label">Axe X</span>
+        <input type="range" data-type="range" aria-labelledby="camera-input-position__title camera-input-position__x-label" id="camera-input-position__x" min="-10" max="10" value="0" step="0.1">
+        <input type="number" data-type="number" aria-labelledby="camera-input-position__title camera-input-position__x-label" id="camera-input-position-number__x" min="-10" max="10" value="0" step="0.1">
+      </div>
+      <div class="camera-input camera-input--position input__y">
+        <span id="camera-input-position__y-label">Axe Y</span>
+        <input type="range" data-type="range" aria-labelledby="camera-input-position__title camera-input-position__y-label" id="camera-input-position__y" min="-10" max="10" value="1.5" step="0.1">
+        <input type="number" data-type="number" aria-labelledby="camera-input-position__title camera-input-position__y-label" id="camera-input-position-number__y" min="-10" max="10" value="1.5" step="0.1">
+      </div>
+      <div class="camera-input camera-input--position input__z">
+        <span id="camera-input-position__z-label">Axe Z</span>
+        <input type="range" data-type="range" aria-labelledby="camera-input-position__title camera-input-position__z-label" id="camera-input-position__z" min="-10" max="10" value="10" step="0.1">
+        <input type="number" data-type="number" aria-labelledby="camera-input-position__title camera-input-position__z-label" id="camera-input-position-number__z" min="-10" max="10" value="10" step="0.1">
+      </div>
     </div>
-    <div class="camera-input input__y">
-      <label for="camera-input__y">Y</label>
-      <input type="range" data-type="range" id="camera-input__y" min="-10" max="10" value="1.5" step="0.1">
-      <input type="number" data-type="number" id="camera-input-number__y" min="-10" max="10" value="1.5" step="0.1">
-    </div>
-    <div class="camera-input input__z">
-      <label for="camera-input__z">Z</label>
-      <input type="range" data-type="range" id="camera-input__z" min="-10" max="10" value="10" step="0.1">
-      <input type="number" data-type="number" id="camera-input-number__z" min="-10" max="10" value="10" step="0.1">
+    <div class="camera-inputs-angle__container">
+      <h2 id="camera-input-angle__title">Controles de l'angle de vue de la caméra</h2>
+      <div class="camera-input camera-input--angle input__angle-x">
+        <span id="camera-input-angle__x-label">Axe X</span>
+        <input type="range" data-type="range" aria-labelledby="camera-input-angle__title camera-input-angle__x-label" id="camera-input-angle__x" min="0" max="360" value="0" step="1">
+        <input type="number" data-type="number" aria-labelledby="camera-input-angle__title camera-input-angle__x-label" id="camera-input-angle-number__x" min="0" max="360" value="0" step="1">
+      </div>
+      <div class="camera-input camera-input--angle input__-y">
+        <span id="camera-input-angle__y-label">Axe Y</span>
+        <input type="range" data-type="range" aria-labelledby="camera-input-angle__title camera-input-angle__y-label" id="camera-input-angle__y" min="0" max="360" value="0" step="1">
+        <input type="number" data-type="number" aria-labelledby="camera-input-angle__title camera-input-angle__y-label" id="camera-input-angle-number__y" min="0" max="360" value="0" step="1">
+      </div>
+      <div class="camera-input camera-input--angle input__-z">
+        <span id="camera-input-angle__z-label">Axe Z</span>
+        <input type="range" data-type="range" aria-labelledby="camera-input-angle__title camera-input-angle__z-label" id="camera-input-angle__z" min="0" max="360" value="0" step="1">
+        <input type="number" data-type="number" aria-labelledby="camera-input-angle__title camera-input-angle__z-label" id="camera-input-angle-number__z" min="0" max="360" value="0" step="1">
+      </div>
     </div>
     <div id="camera-logger">
       <h2>Logger :</h2>

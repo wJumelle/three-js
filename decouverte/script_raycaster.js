@@ -37,8 +37,10 @@ document.addEventListener('DOMContentLoaded', () => {
   btnNextView.addEventListener('click', handleSwitchView);
 
   // Gestion de l'interface pour jouer directement avec la caméra
-  document.querySelectorAll('.camera-inputs__container input[type=range]').forEach(input => input.addEventListener('change', handleCameraInputsChange));
-  document.querySelectorAll('.camera-inputs__container input[type=number]').forEach(input => input.addEventListener('change', handleCameraInputsChange));
+  document.querySelectorAll('.camera-inputs-position__container input[type=range]').forEach(input => input.addEventListener('change', handleCameraInputsPositionChange));
+  document.querySelectorAll('.camera-inputs-position__container input[type=number]').forEach(input => input.addEventListener('change', handleCameraInputsPositionChange));
+  document.querySelectorAll('.camera-inputs-angle__container input[type=range]').forEach(input => input.addEventListener('change', handleCameraInputsAngleChange));
+  document.querySelectorAll('.camera-inputs-angle__container input[type=number]').forEach(input => input.addEventListener('change', handleCameraInputsAngleChange));
 });
 
 // Définition de variables globales afin de simplifier la démonstration
@@ -170,17 +172,17 @@ function loop() {
 }
 
 /**
- * moveCamera - Fonction permettant de déplacer la caméra
- * @param {number} x - Position en x
- * @param {number} y - Position en y
- * @param {number} z - Position en z
+ * moveCameraPosition - Fonction permettant de déplacer la caméra
+ * @param {number} px - Position en x
+ * @param {number} py - Position en y
+ * @param {number} pz - Position en z
  * @param {string} easingfunction - Fonction d'easing
  */
-function moveCamera(x, y, z, easingfunction = "power2.inOut") {
+function moveCameraPosition(px, py, pz, easingfunction = "power2.inOut") {
   gsap.to(camera.position, {
-      x: x,
-      y: y,
-      z: z,
+      x: px,
+      y: py,
+      z: pz,
       duration: 2, // Durée en secondes
       ease: easingfunction,
       onUpdate: () => camera.lookAt(new THREE.Vector3(0, 0, 0))
@@ -191,7 +193,37 @@ function moveCamera(x, y, z, easingfunction = "power2.inOut") {
   `
     ${document.getElementById('logger').innerHTML +
       `
-        <p>Position de la caméra : x = <strong>${x}</strong>, y = <strong>${y}</strong>, z = <strong>${z}</strong></p>
+        <p>Position de la caméra : x = <strong>${px}</strong>, y = <strong>${py}</strong>, z = <strong>${pz}</strong></p>
+      `}
+  `;
+}
+
+/**
+ * moveCameraFocusPoint - Fonction permettant de déplacer la caméra
+ * @param {object} vector - Vecteur de direction
+ * @param {number} x - Position en x
+ * @param {number} y - Position en y
+ * @param {number} z - Position en z
+ * @param {string} easingfunction - Fonction d'easing
+ */
+function moveCameraFocusPoint(vector, x, y, z, easingfunction = "power2.inOut") {
+  gsap.to(vector, {
+    x: x,
+    y: y,
+    z: z,
+    duration: 2, // Durée de l'animation en secondes
+    ease: easingfunction,
+    onUpdate: () => {
+        camera.lookAt(vector);
+    }
+  });
+
+  // On met à jour le logger
+  document.getElementById('logger').innerHTML =
+  `
+    ${document.getElementById('logger').innerHTML +
+      `
+        <p>Coordonnées du point de focus de la caméra : x = <strong>${x}</strong>, y = <strong>${y}</strong>, z = <strong>${z}</strong></p>
       `}
   `;
 }
@@ -208,14 +240,14 @@ function handleSwitchView(e) {
   }
 
   // On déplace la caméra
-  moveCamera(cameraViews[currentCameraView].x, cameraViews[currentCameraView].y, cameraViews[currentCameraView].z)
+  moveCameraPosition(cameraViews[currentCameraView].x, cameraViews[currentCameraView].y, cameraViews[currentCameraView].z)
 }
 
 /**
- * handleCameraInputsChange - Fonction permettant de gérer le changement de position de la caméra via l'interface
+ * handleCameraInputsPositionChange - Fonction permettant de gérer le changement de position de la caméra via l'interface
  * @param {object} e
  */
-function handleCameraInputsChange(e) {
+function handleCameraInputsPositionChange(e) {
   const { id, value, dataset } = e.target;
   const input = document.getElementById(id);
   let nextPositions = {
@@ -226,24 +258,64 @@ function handleCameraInputsChange(e) {
 
   // On met à jour la position en fonction de l'input modifié
   switch (id) {
-    case 'camera-input__x':
-    case 'camera-input-number__x':
+    case 'camera-input-position__x':
+    case 'camera-input-position-number__x':
       nextPositions.x = value;
       break;
-    case 'camera-input__y':
-    case 'camera-input-number__y':
+    case 'camera-input-position__y':
+    case 'camera-input-position-number__y':
       nextPositions.y = value;
       break;
-    case 'camera-input__z':
-    case 'camera-input-number__z':
+    case 'camera-input-position__z':
+    case 'camera-input-position-number__z':
       nextPositions.z = value;
       break;
   }
 
-  console.log({id}, {value}, {dataset}, {nextPositions});
+  // On déplace la caméra
+  moveCameraPosition(nextPositions.x, nextPositions.y, nextPositions.z);
+
+  // On met à jour la valeurs du champ associé
+  if(dataset.type === 'range') {
+    input.nextElementSibling.value = input.value;
+  } else {
+    input.previousElementSibling.value = input.value;
+  }
+}
+
+/**
+ * handleCameraInputsAngleChange - Fonction permettant de gérer le point focus par la caméra via l'interface
+ * @param {object} e
+ */
+function handleCameraInputsAngleChange(e) {
+  const { id, value, dataset } = e.target;
+  const input = document.getElementById(id);
+  const direction = camera.getWorldDirection(new THREE.Vector3());
+
+  let nextFacingPointCoords = {
+    x: direction.x,
+    y: direction.y,
+    z: direction.z
+  }
+
+  // On met à jour la position en fonction de l'input modifié
+  switch (id) {
+    case 'camera-input-angle__x':
+    case 'camera-input-angle-number__x':
+      nextFacingPointCoords.x = value;
+      break;
+    case 'camera-input-angle__y':
+    case 'camera-input-angle-number__y':
+      nextFacingPointCoords.y = value;
+      break;
+    case 'camera-input-angle__z':
+    case 'camera-input-angle-number__z':
+      nextFacingPointCoords.z = value;
+      break;
+  }
 
   // On déplace la caméra
-  moveCamera(nextPositions.x, nextPositions.y, nextPositions.z);
+  moveCameraFocusPoint(direction, nextFacingPointCoords.x, nextFacingPointCoords.y, nextFacingPointCoords.z);
 
   // On met à jour la valeurs du champ associé
   if(dataset.type === 'range') {

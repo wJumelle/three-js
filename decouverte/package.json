@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "gltfloader": "github:codeurdenuit/GLTFLoader",
+    "gsap": "^3.12.7",
     "three": "^0.171.0"
   }
 }

@@ -61,6 +61,12 @@ h2 {
     z-index: 100;
 }
 
+.camera-inputs-position__container {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
+
 .camera-input {
     display: flex;
     gap: 1rem;
@@ -78,7 +84,8 @@ h2 {
 /* Logger */
 #camera-logger {
     margin-top: 2rem;
-    min-width: 300px;
+    width: 415px;
+    max-width: 415px;
 }
 
 #logger {
