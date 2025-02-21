@@ -227,15 +227,20 @@ function handleCameraInputsChange(e) {
   // On met à jour la position en fonction de l'input modifié
   switch (id) {
     case 'camera-input__x':
+    case 'camera-input-number__x':
       nextPositions.x = value;
       break;
     case 'camera-input__y':
+    case 'camera-input-number__y':
       nextPositions.y = value;
       break;
     case 'camera-input__z':
+    case 'camera-input-number__z':
       nextPositions.z = value;
       break;
   }
+
+  console.log({id}, {value}, {dataset}, {nextPositions});
 
   // On déplace la caméra
   moveCamera(nextPositions.x, nextPositions.y, nextPositions.z);
