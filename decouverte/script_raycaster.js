@@ -1,5 +1,52 @@
 import * as THREE from 'three'
 import GLTFLoader from 'gltfloader'
+import gsap from "gsap"
+
+// Variables autour de la caméra
+const nbCameraViews = 4;
+let currentCameraView = 0;
+const cameraViews = [
+  {
+    x: 0,
+    y: 1.5,
+    z: 4
+  },
+  {
+    x: 6,
+    y: 5,
+    z: 7
+  },
+  {
+    x: -6,
+    y: 5,
+    z: 4
+  },
+  {
+    x: 0,
+    y: 1.5,
+    z: -10
+  },
+];
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Gestion des boutons pour changer les vues
+  const btnPrevView = document.getElementById('camera-controller__prev');
+  const btnNextView = document.getElementById('camera-controller__next');
+
+  btnPrevView.addEventListener('click', handleSwitchView);
+  btnNextView.addEventListener('click', handleSwitchView);
+
+  // Gestion de l'interface pour jouer directement avec la caméra
+  document.querySelectorAll('.camera-inputs__container input[type=range]').forEach(input => input.addEventListener('change', handleCameraInputsChange));
+  document.querySelectorAll('.camera-inputs__container input[type=number]').forEach(input => input.addEventListener('change', handleCameraInputsChange));
+});
+
+// Définition de variables globales afin de simplifier la démonstration
+window.canvas = document.getElementById('canvas')
+window.canvas.width = innerWidth
+window.canvas.height = innerHeight
+window.iw = innerWidth
+window.ih = innerHeight
 
 // Déclaration de notre scène, qui contiendra l'ensemble des éléments que l'on souhaite afficher
 const scene = new THREE.Scene()
@@ -15,7 +62,6 @@ const camera = new THREE.PerspectiveCamera(70, iw/ih)
 // Ex 2 : const geometry = await GLTFLoader.loadGeometry('./assets/bibi/bibi.glb')
 // Ex 3 : const mesh = await GLTFLoader.loadObject('./assets/bibi/bibi.glb', 'bibi')
 const mesh = await GLTFLoader.loadObject('./assets/bibi/bibi2.glb', 'bibi')
-console.log(mesh)
 
 // Pour le chargement des textures sur les faces de notre cube, nous avons d'abord
 // besoin de charger une image en mémoire
@@ -30,26 +76,35 @@ mesh.children[0].material = new THREE.MeshPhongMaterial({map: texture, shininess
 // Ex 1 et 2 : const mesh = new THREE.Mesh(geometry, material)
 
 // Pour utiliser le shader MeshPhongMaterial nous allons avoir besoin d'instancier une lumière
-const light = new THREE.PointLight(0xeeeeee, 10)
+const lightFront = new THREE.PointLight(0xeeeeee, 10)
+
+// On ajoute une lumière ambiante pour éclairer l'ensemble de la scène
+const lightAmbient = new THREE.AmbientLight(0x404040, 10)
 
 // On ajoute l'instance de mesh à la scene
 scene.add(mesh)
 
 // On ajoute la lumière à la scène pour qu'elle soit prise en compte par le moteur
-scene.add(light)
+scene.add(lightFront)
+
+// On ajoute la lumière ambiante à la scène pour qu'elle soit prise en compte par le moteur
+scene.add(lightAmbient)
 
 // On positionne la caméra à l'aide de la propriété position (x, y, z)
-camera.position.set(0, 1.5, 4)
+camera.position.set(0, 1.5, 10)
+
+// On ajuste le regard de la caméra
+camera.lookAt(new THREE.Vector3(0, 0, 0))
 
 // On positionne la lumière au même niveau que la caméra
-light.position.set(0, 1, 2)
+lightFront.position.set(0, 1, 2)
 
 // Initialisation du Raycaster et du vecteur de la souris
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 
 // Écouteur de clic
-window.addEventListener('click', (event) => {
+document.getElementById('canvas').addEventListener('click', (event) => {
     // Convertir la position de la souris en coordonnées normalisées (-1 à 1)
     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
@@ -112,4 +167,83 @@ function loop() {
 
   // On lance une instruction pour effectuer un premier rendu en précisant la scène que l'on souhaite afficher et la caméra
   renderer.render(scene, camera)
+}
+
+/**
+ * moveCamera - Fonction permettant de déplacer la caméra
+ * @param {number} x - Position en x
+ * @param {number} y - Position en y
+ * @param {number} z - Position en z
+ * @param {string} easingfunction - Fonction d'easing
+ */
+function moveCamera(x, y, z, easingfunction = "power2.inOut") {
+  gsap.to(camera.position, {
+      x: x,
+      y: y,
+      z: z,
+      duration: 2, // Durée en secondes
+      ease: easingfunction,
+      onUpdate: () => camera.lookAt(new THREE.Vector3(0, 0, 0))
+  });
+
+  // On met à jour le logger
+  document.getElementById('logger').innerHTML =
+  `
+    ${document.getElementById('logger').innerHTML +
+      `
+        <p>Position de la caméra : x = <strong>${x}</strong>, y = <strong>${y}</strong>, z = <strong>${z}</strong></p>
+      `}
+  `;
+}
+
+/**
+ * handleSwitchView - Fonction permettant de gérer le changement de vue
+ */
+function handleSwitchView(e) {
+  // On récupère la position à charger en fonction du bouton cliqué
+  if (e.target.id === 'camera-controller__prev') {
+    currentCameraView = currentCameraView === 0 ? nbCameraViews - 1 : currentCameraView - 1
+  } else {
+    currentCameraView = currentCameraView === nbCameraViews - 1 ? 0 : currentCameraView + 1
+  }
+
+  // On déplace la caméra
+  moveCamera(cameraViews[currentCameraView].x, cameraViews[currentCameraView].y, cameraViews[currentCameraView].z)
+}
+
+/**
+ * handleCameraInputsChange - Fonction permettant de gérer le changement de position de la caméra via l'interface
+ * @param {object} e
+ */
+function handleCameraInputsChange(e) {
+  const { id, value, dataset } = e.target;
+  const input = document.getElementById(id);
+  let nextPositions = {
+    x: camera.position.x,
+    y: camera.position.y,
+    z: camera.position.z
+  }
+
+  // On met à jour la position en fonction de l'input modifié
+  switch (id) {
+    case 'camera-input__x':
+      nextPositions.x = value;
+      break;
+    case 'camera-input__y':
+      nextPositions.y = value;
+      break;
+    case 'camera-input__z':
+      nextPositions.z = value;
+      break;
+  }
+
+  // On déplace la caméra
+  moveCamera(nextPositions.x, nextPositions.y, nextPositions.z);
+
+  // On met à jour la valeurs du champ associé
+  if(dataset.type === 'range') {
+    input.nextElementSibling.value = input.value;
+  } else {
+    input.previousElementSibling.value = input.value;
+  }
 }

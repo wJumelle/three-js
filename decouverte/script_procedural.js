@@ -1,5 +1,12 @@
 import * as THREE from 'three'
 
+// Définition de variables globales afin de simplifier la démonstration
+window.canvas = document.getElementById('canvas')
+window.canvas.width = innerWidth
+window.canvas.height = innerHeight
+window.iw = innerWidth
+window.ih = innerHeight
+
 // On instancie la scene
 const scene = new THREE.Scene()
 

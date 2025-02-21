@@ -4,22 +4,39 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ThreeJS Découverte</title>
-  <script type="module">
-    // Définition de variables globales afin de simplifier la démonstration
-    window.canvas = document.getElementById('canvas')
-    window.canvas.width = innerWidth
-    window.canvas.height = innerHeight
-    window.iw = innerWidth
-    window.ih = innerHeight
-  </script>
   <!-- <script type="module" src="script_procedural.js"></script> -->
-  <script type="module" src="script.js"></script>
-  <style>
-    *, *::before, **::after { box-sizing: border-box; }
-    * { padding: 0; margin: 0 }
-  </style>
+  <script type="module" src="script_raycaster.js"></script>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <canvas id="canvas"></canvas>
+  <canvas id="canvas" data-view="1"></canvas>
+  <div class="camera-controller__container">
+    <button id="camera-controller__prev">Vue précédente</button>
+    <button id="camera-controller__next">Vue suivante</button>
+  </div>
+  <div class="camera-inputs__container camera-logger__container">
+    <h2>Contrôles de la caméra :</h2>
+    <div class="camera-input input__x">
+      <label for="camera-input__x">X</label>
+      <input type="range" data-type="range" id="camera-input__x" min="-10" max="10" value="0" step="0.1">
+      <input type="number" data-type="number" id="camera-input-number__x" min="-10" max="10" value="0" step="0.1">
+    </div>
+    <div class="camera-input input__y">
+      <label for="camera-input__y">Y</label>
+      <input type="range" data-type="range" id="camera-input__y" min="-10" max="10" value="1.5" step="0.1">
+      <input type="number" data-type="number" id="camera-input-number__y" min="-10" max="10" value="1.5" step="0.1">
+    </div>
+    <div class="camera-input input__z">
+      <label for="camera-input__z">Z</label>
+      <input type="range" data-type="range" id="camera-input__z" min="-10" max="10" value="10" step="0.1">
+      <input type="number" data-type="number" id="camera-input-number__z" min="-10" max="10" value="10" step="0.1">
+    </div>
+    <div id="camera-logger">
+      <h2>Logger :</h2>
+      <div id="logger">
+        <p>Position de la caméra : x = <strong>0</strong>, y = <strong>1.5</strong>, z = <strong>10</strong></p>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

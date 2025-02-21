@@ -1,6 +1,13 @@
 import * as THREE from 'three'
 import GLTFLoader from 'gltfloader'
 
+// Définition de variables globales afin de simplifier la démonstration
+window.canvas = document.getElementById('canvas')
+window.canvas.width = innerWidth
+window.canvas.height = innerHeight
+window.iw = innerWidth
+window.ih = innerHeight
+
 // Déclaration de notre scène, qui contiendra l'ensemble des éléments que l'on souhaite afficher
 const scene = new THREE.Scene()
 

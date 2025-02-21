@@ -172,3 +172,10 @@ Enfin dans le tuto il s'amuse à faire varier la rotation du personnage en Y en 
 Pour finir nous allons aborder le sujet de la génération procédurale.
 Pour l'affichage de la géométrie nous allons utiliser le shader [**PointsMaterial**](https://threejs.org/docs/#api/en/materials/PointsMaterial) qui va nous permettre d'afficher uniquement les points.
 Et donc il n'est pas nécessaire de générer les coordonnées de textures, l'orientation des faces etc, on va générer uniquement l'attribut position des points.
+
+### Atelier 1 : création du mouvement de la caméra au clic sur des boutons pour s'approcher des points d'intérêt
+
+Cela nécessite l'installation de GSAP : `npm install gsap`.
+
+Ensuite pour gérer la position de caméra il nous suffit de l'animer à l'aide de `gsap.to()`.
+Pour information, voici la documentation sur la [**fonction d'easing**](https://gsap.com/docs/v3/Eases/).
