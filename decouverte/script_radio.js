@@ -114,14 +114,13 @@ loader.load('./assets/radio/radio_light.glb',
             if (intersects.length > 0) {
                 const clickedMesh = intersects[0].object;
 
+                // Interaction 1 : Changer la couleur du matériau
                 // Vérifie si le matériau est déjà unique, sinon clone-le
-                if (!clickedMesh.userData.originalMaterial) {
-                    clickedMesh.userData.originalMaterial = clickedMesh.material.clone();
-                }
+                // changeMeshColor(clickedMesh);
 
-                // Appliquer la nouvelle couleur
-                clickedMesh.material = clickedMesh.material.clone();
-                clickedMesh.material.color.set(getRandomColor());
+                // Interaction 2 : Ouverture d'une popin avec les informations de l'objet
+                // actuellement remplacé par une alert basique
+                alert(`Nom du mesh cliqué : ${clickedMesh.name}`);
             }
         });
 
@@ -305,6 +304,20 @@ function handleCameraInputsAngleChange(e) {
     } else {
         input.previousElementSibling.value = input.value;
     }
+}
+
+/**
+ * changeMeshColor - Fonction permettant de gérer l'intéraction 1
+ * @param {object} mesh
+ */
+function changeMeshColor(mesh) {
+    if (!mesh.userData.originalMaterial) {
+        mesh.userData.originalMaterial = mesh.material.clone();
+    }
+
+    // Appliquer la nouvelle couleur
+    mesh.material = mesh.material.clone();
+    mesh.material.color.set(getRandomColor());
 }
 
 /**
