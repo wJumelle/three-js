@@ -42,6 +42,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.camera-inputs-position__container input[type=number]').forEach(input => input.addEventListener('change', handleCameraInputsPositionChange));
     document.querySelectorAll('.camera-inputs-angle__container input[type=range]').forEach(input => input.addEventListener('change', handleCameraInputsAngleChange));
     document.querySelectorAll('.camera-inputs-angle__container input[type=number]').forEach(input => input.addEventListener('change', handleCameraInputsAngleChange));
+    document.querySelectorAll('.camera-params__container input[type=range]').forEach(input => input.addEventListener('change', handleCameraParamsChange));
+    document.querySelectorAll('.camera-params__container input[type=number]').forEach(input => input.addEventListener('change', handleCameraParamsChange));
 });
 
 // Définition de variables globales afin de simplifier la démonstration
@@ -203,11 +205,11 @@ function moveCameraFocusPoint(vector, x, y, z, easingfunction = "power2.inOut") 
     // On met à jour le logger
     document.getElementById('logger').innerHTML =
         `
-    ${document.getElementById('logger').innerHTML +
-    `
-        <p>Coordonnées du point de focus de la caméra : x = <strong>${x}</strong>, y = <strong>${y}</strong>, z = <strong>${z}</strong></p>
-    `}
-`;
+        ${document.getElementById('logger').innerHTML +
+        `
+            <p>Coordonnées du point de focus de la caméra : x = <strong>${x}</strong>, y = <strong>${y}</strong>, z = <strong>${z}</strong></p>
+        `}
+    `;
 }
 
 /**
@@ -313,6 +315,63 @@ function handleCameraInputsAngleChange(e) {
     } else {
         input.previousElementSibling.value = input.value;
     }
+}
+
+/**
+ * handleCameraParamsChange - Fonction permettant de gérer les paramètres (fov, near, far, zoom) de la caméra via l'interface
+ * @param {*} e
+ */
+function handleCameraParamsChange(e) {
+    const {
+        id,
+        value,
+        dataset
+    } = e.target;
+    const input = document.getElementById(id);
+    let param = null;
+
+    // On met à jour la position en fonction de l'input modifié
+    switch (id) {
+        case 'camera-input-params__near':
+        case 'camera-input-params-number__near':
+            camera.near = value;
+            param = 'near';
+            break;
+        case 'camera-input-params__far':
+        case 'camera-input-params-number__far':
+            camera.far = value;
+            param = 'far';
+            break;
+        case 'camera-input-params__fov':
+        case 'camera-input-params-number__fov':
+            camera.fov = value;
+            param = 'fov';
+            break;
+        case 'camera-input-params__zoom':
+        case 'camera-input-params-number__zoom':
+            camera.zoom = value;
+            param = 'zoom';
+            break;
+    }
+
+    // On rafraichit
+    camera.updateProjectionMatrix()
+
+    // On met à jour la valeurs du champ associé
+    if (dataset.type === 'range') {
+        input.nextElementSibling.value = input.value;
+    } else {
+        input.previousElementSibling.value = input.value;
+    }
+
+    // On met à jour le logger
+    document.getElementById('logger').innerHTML =
+        `
+        ${document.getElementById('logger').innerHTML +
+        `
+            <p>Paramètre modifié ${param} : <strong>${value}</strong></p>
+        `}
+    `;
 }
 
 /**
