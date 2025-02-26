@@ -10,22 +10,22 @@ let currentCameraView = 0;
 const cameraViews = [{
         x: 130,
         y: 54,
-        z: 10
+        z: 391
     },
     {
         x: 187.11,
         y: -0.7,
-        z: 15
+        z: 290.3
     },
     {
         x: 7.48,
         y: 77.28,
-        z: 12
+        z: 233.9
     },
     {
         x: -128,
         y: 241.2,
-        z: 3
+        z: 300.1
     },
 ];
 
@@ -54,9 +54,15 @@ window.ih = innerHeight
 // Déclaration de notre scène, qui contiendra l'ensemble des éléments que l'on souhaite afficher
 const scene = new THREE.Scene()
 
+// Définition des constantes pour la caméra
+const CAMERA_FOV = 70
+const CAMERA_ZOOM = 2.28
+const CAMERA_NEAR = 70
+const CAMERA_FAR = 10000048
+
 // On ajoute une caméra en précisant la focal (ici 70) et le ratio de l'écran (définit ici par nos variable globale)
 // La caméra va générer la matrice qui va transposer les objets du points de vue de l'observateur
-const camera = new THREE.PerspectiveCamera(70, iw / ih)
+const camera = new THREE.PerspectiveCamera(CAMERA_FOV, iw / ih, CAMERA_NEAR, CAMERA_FAR)
 
 let renderer = null
 
@@ -65,8 +71,6 @@ const loader = new GLTFLoader()
 loader.load('./assets/radio/radio_light.glb',
     function(gltf) {
         const radio = gltf.scene.children[0].children[0].children[0];
-        // const scaling = 3.5;
-        // radio.scale.set(scaling, scaling, scaling)
 
         // On récupère l'ensemble des mesh présent dans l'objet Radio
         const meshes = [];
@@ -86,16 +90,15 @@ loader.load('./assets/radio/radio_light.glb',
         scene.add(lightFront)
 
         // On positionne la caméra à l'aide de la propriété position (x, y, z)
-        camera.position.set(0, 1.5, 10)
+        camera.position.set(cameraViews[0].x, cameraViews[0].y, cameraViews[0].z)
 
         // On ajuste le regard de la caméra
         camera.lookAt(new THREE.Vector3(0, 0, 0))
 
         // On ajuste le zoom
-        // camera.fov = 2.28
+        camera.zoom = CAMERA_ZOOM
         camera.updateProjectionMatrix()
-
-        console.log({camera}, camera.fov);
+        console.log({camera});
 
         // On positionne la lumière au même niveau que la caméra
         lightFront.position.set(0, 1, 3)
