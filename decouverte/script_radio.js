@@ -8,24 +8,24 @@ import {
 const nbCameraViews = 4;
 let currentCameraView = 0;
 const cameraViews = [{
-        x: 0,
-        y: 1.5,
-        z: 4
+        x: 130,
+        y: 54,
+        z: 10
     },
     {
-        x: 6,
-        y: 5,
-        z: 7
+        x: 187.11,
+        y: -0.7,
+        z: 15
     },
     {
-        x: -6,
-        y: 5,
-        z: 4
+        x: 7.48,
+        y: 77.28,
+        z: 12
     },
     {
-        x: 0,
-        y: 1.5,
-        z: -10
+        x: -128,
+        y: 241.2,
+        z: 3
     },
 ];
 
@@ -65,11 +65,11 @@ const loader = new GLTFLoader()
 loader.load('./assets/radio/radio_light.glb',
     function(gltf) {
         const radio = gltf.scene.children[0].children[0].children[0];
-        const scaling = 3.5;
-        radio.scale.set(scaling, scaling, scaling)
+        // const scaling = 3.5;
+        // radio.scale.set(scaling, scaling, scaling)
 
+        // On récupère l'ensemble des mesh présent dans l'objet Radio
         const meshes = [];
-
         radio.traverse((child) => {
             if(child.name !== 'Radio' && child.type === 'Mesh') {
                 meshes.push(child)
@@ -90,6 +90,12 @@ loader.load('./assets/radio/radio_light.glb',
 
         // On ajuste le regard de la caméra
         camera.lookAt(new THREE.Vector3(0, 0, 0))
+
+        // On ajuste le zoom
+        // camera.fov = 2.28
+        camera.updateProjectionMatrix()
+
+        console.log({camera}, camera.fov);
 
         // On positionne la lumière au même niveau que la caméra
         lightFront.position.set(0, 1, 3)
