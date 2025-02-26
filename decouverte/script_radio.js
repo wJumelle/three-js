@@ -67,10 +67,13 @@ loader.load('./assets/radio/radio_light.glb',
         const radio = gltf.scene.children[0].children[0].children[0];
         const scaling = 3.5;
         radio.scale.set(scaling, scaling, scaling)
-        console.log('Radio', radio)
+
+        const meshes = [];
 
         radio.traverse((child) => {
-            console.log('Radio child => ', child);
+            if(child.name !== 'Radio' && child.type === 'Mesh') {
+                meshes.push(child)
+            }
         })
 
         // On ajoute la scène chargée à notre scène principale
@@ -90,6 +93,37 @@ loader.load('./assets/radio/radio_light.glb',
 
         // On positionne la lumière au même niveau que la caméra
         lightFront.position.set(0, 1, 3)
+
+        // Initialisation du Raycaster et du vecteur de la souris
+        const raycaster = new THREE.Raycaster();
+        const mouse = new THREE.Vector2();
+
+        // Écouteur de clic
+        document.getElementById('canvas').addEventListener('click', (event) => {
+            // Convertir la position de la souris en coordonnées normalisées (-1 à 1)
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+            // Lancer le rayon depuis la caméra
+            raycaster.setFromCamera(mouse, camera);
+
+            // Vérifier les intersections avec TOUS les meshes
+            const intersects = raycaster.intersectObjects(meshes);
+
+            // Si au moins un objet est touché, change sa couleur
+            if (intersects.length > 0) {
+                const clickedMesh = intersects[0].object;
+
+                // Vérifie si le matériau est déjà unique, sinon clone-le
+                if (!clickedMesh.userData.originalMaterial) {
+                    clickedMesh.userData.originalMaterial = clickedMesh.material.clone();
+                }
+
+                // Appliquer la nouvelle couleur
+                clickedMesh.material = clickedMesh.material.clone();
+                clickedMesh.material.color.set(getRandomColor());
+            }
+        });
 
         // On instancie le moteur de rendu en définissant la balise à utilsier
         renderer = new THREE.WebGLRenderer({
@@ -271,4 +305,12 @@ function handleCameraInputsAngleChange(e) {
     } else {
         input.previousElementSibling.value = input.value;
     }
+}
+
+/**
+ * getRandomColor - Fonction permettant de générer une couleur aléatoire au format 0xRRGGBB
+ * @returns {*} - Couleur aléatoire
+ */
+function getRandomColor() {
+    return Math.floor(Math.random() * 16777215);
 }
