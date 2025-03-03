@@ -179,3 +179,40 @@ Cela nécessite l'installation de GSAP : `npm install gsap`.
 
 Ensuite pour gérer la position de caméra il nous suffit de l'animer à l'aide de `gsap.to()`.
 Pour information, voici la documentation sur la [**fonction d'easing**](https://gsap.com/docs/v3/Eases/).
+
+### Atelier 2 : export du build
+
+Pour exporter le build nous avons besoin d'inclure le fichier .glb dans le build réalisé par Vite.
+Donc pour cela dans notre fichier JS nous devons réaliser l'import du fichier et le passer en paramètre du loader.
+
+```
+import radio3DModel from './assets/radio/radio_light.glb';
+
+const loader = new GLTFLoader()
+loader.load(radio3DModel,
+    function(gltf) { // Success },
+    function(xhr) { // On process },
+    function(error) {
+        console.error('Erreur lors du chargement du fichier : ', error);
+    }
+);
+```
+
+Seulement, l'import du fichier nécessite la création d'un fichier de configuration Vite pour que l'extension
+du fichier soit reconnue.
+Nous créons donc à la racine du projet **decouverte** le fichier `vite.config.js` contenant les lignes suivantes.
+
+```
+export default {
+    assetsInclude: ['**/*.gltf', '**/*.glb'],
+}
+```
+
+Pour que le chemin des fichiers assets soit bien écrit dans les fichiers .js et .css nous devons ajouter une autre ligne de configuration afin de paramétrer le **base** du projet.
+
+```
+export default {
+    [...]
+    base: "./"
+}
+```
