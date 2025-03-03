@@ -8,26 +8,31 @@ import {
 const nbCameraViews = 4;
 let currentCameraView = 0;
 const cameraViews = [{
-        x: 130,
-        y: 54,
-        z: 391
+        x: 0,
+        y: 1.5,
+        z: 2
     },
     {
-        x: 187.11,
-        y: -0.7,
-        z: 290.3
+        x: 1,
+        y: 3,
+        z: 5
     },
     {
-        x: 7.48,
-        y: 77.28,
-        z: 233.9
+        x: -2,
+        y: 1,
+        z: 1
     },
     {
-        x: -128,
-        y: 241.2,
-        z: 300.1
+        x: 5,
+        y: -1,
+        z: 6
     },
 ];
+let cameraFocusPoint = {
+    x: 0,
+    y: 0,
+    z: 0
+}
 
 document.addEventListener('DOMContentLoaded', () => {
     // Gestion des boutons pour changer les vues
@@ -58,13 +63,14 @@ const scene = new THREE.Scene()
 
 // Définition des constantes pour la caméra
 const CAMERA_FOV = 70
-const CAMERA_ZOOM = 2.28
+const CAMERA_ZOOM = 2.3
 const CAMERA_NEAR = 70
 const CAMERA_FAR = 10000048
 
 // On ajoute une caméra en précisant la focal (ici 70) et le ratio de l'écran (définit ici par nos variable globale)
 // La caméra va générer la matrice qui va transposer les objets du points de vue de l'observateur
-const camera = new THREE.PerspectiveCamera(CAMERA_FOV, iw / ih, CAMERA_NEAR, CAMERA_FAR)
+// const camera = new THREE.PerspectiveCamera(CAMERA_FOV, iw / ih, CAMERA_NEAR, CAMERA_FAR)
+const camera = new THREE.PerspectiveCamera(CAMERA_FOV, iw / ih)
 
 let renderer = null
 
@@ -83,6 +89,9 @@ loader.load(radio3DModel,
                 meshes.push(child)
             }
         })
+
+        // On positionne l'objet dans la scène à 0 0 0
+        gltf.scene.children[0].children[0].children[0].position.set(0, 0, 0)
 
         // On ajoute la scène chargée à notre scène principale
         scene.add(gltf.scene)
@@ -171,7 +180,7 @@ function moveCameraPosition(px, py, pz, easingfunction = "power2.inOut") {
         z: pz,
         duration: 2, // Durée en secondes
         ease: easingfunction,
-        onUpdate: () => camera.lookAt(new THREE.Vector3(0, 0, 0))
+        onUpdate: () => camera.lookAt(new THREE.Vector3(cameraFocusPoint.x, cameraFocusPoint.y, cameraFocusPoint.z))
     });
 
     // On met à jour le logger
@@ -193,6 +202,10 @@ function moveCameraPosition(px, py, pz, easingfunction = "power2.inOut") {
  * @param {string} easingfunction - Fonction d'easing
  */
 function moveCameraFocusPoint(vector, x, y, z, easingfunction = "power2.inOut") {
+    cameraFocusPoint.x = x;
+    cameraFocusPoint.y = y;
+    cameraFocusPoint.z = z;
+
     gsap.to(vector, {
         x: x,
         y: y,
@@ -285,12 +298,15 @@ function handleCameraInputsAngleChange(e) {
     } = e.target;
     const input = document.getElementById(id);
     const direction = camera.getWorldDirection(new THREE.Vector3());
+    console.log({direction});
 
     let nextFacingPointCoords = {
         x: direction.x,
         y: direction.y,
         z: direction.z
     }
+
+    console.log({nextFacingPointCoords});
 
     // On met à jour la position en fonction de l'input modifié
     switch (id) {
