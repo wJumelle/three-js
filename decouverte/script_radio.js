@@ -68,9 +68,11 @@ const camera = new THREE.PerspectiveCamera(CAMERA_FOV, iw / ih, CAMERA_NEAR, CAM
 
 let renderer = null
 
+import radio3DModel from './assets/radio/radio_light.glb';
+
 // On ajoute un premier élément à l'image
 const loader = new GLTFLoader()
-loader.load('./assets/radio/radio_light.glb',
+loader.load(radio3DModel,
     function(gltf) {
         const radio = gltf.scene.children[0].children[0].children[0];
 
