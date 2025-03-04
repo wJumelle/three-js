@@ -180,7 +180,7 @@ function moveCameraPosition(px, py, pz, easingfunction = "power2.inOut") {
         z: pz,
         duration: 2, // Durée en secondes
         ease: easingfunction,
-        onUpdate: () => camera.lookAt(new THREE.Vector3(cameraFocusPoint.x, cameraFocusPoint.y, cameraFocusPoint.z))
+        // onUpdate: () => camera.lookAt(new THREE.Vector3(cameraFocusPoint.x, cameraFocusPoint.y, cameraFocusPoint.z))
     });
 
     // On met à jour le logger
@@ -202,6 +202,7 @@ function moveCameraPosition(px, py, pz, easingfunction = "power2.inOut") {
  * @param {string} easingfunction - Fonction d'easing
  */
 function moveCameraFocusPoint(vector, x, y, z, easingfunction = "power2.inOut") {
+    console.log('moveCameraFocusPoint', {camera});
     cameraFocusPoint.x = x;
     cameraFocusPoint.y = y;
     cameraFocusPoint.z = z;
@@ -210,7 +211,7 @@ function moveCameraFocusPoint(vector, x, y, z, easingfunction = "power2.inOut") 
         x: x,
         y: y,
         z: z,
-        duration: 2, // Durée de l'animation en secondes
+        duration: 0, // Durée de l'animation en secondes
         ease: easingfunction,
         onUpdate: () => {
             camera.lookAt(vector);
